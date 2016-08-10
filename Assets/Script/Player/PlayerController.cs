@@ -39,8 +39,7 @@ public class PlayerController : MonoBehaviour {
 
             rb.velocity = moveVector.normalized * moveSpeed;
 
-            transform.LookAt(transform.position + rb.velocity);
-
+            transform.LookAt(transform.position + rb.velocity + Camera.main.transform.forward);
         }
     }
 

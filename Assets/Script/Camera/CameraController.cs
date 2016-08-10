@@ -16,18 +16,26 @@ public class CameraController : MonoBehaviour {
 
     void LateUpdate()
     {
+        #region Camera Rotation
         float horizontal = Input.GetAxis("Mouse X") * rotateSpeed;
         float vertical = Input.GetAxis("Mouse Y") * rotateSpeed;
 
-        transform.eulerAngles += new Vector3(-vertical, horizontal, 0);
+        Vector3 targetEulerAngles = transform.eulerAngles + new Vector3(-vertical, horizontal, 0);
 
-        #region Camera 
-        Vector3 targetPos = player.position;
-        targetPos.y = 3;
-        transform.position = targetPos;
+
+        targetEulerAngles.x = Mathf.Clamp(targetEulerAngles.x, 0, 90);
+
+
+        transform.eulerAngles = targetEulerAngles;
 
         #endregion
 
+        #region Camera Movement
+        Vector3 targetPos = player.position;
+        targetPos.y = 2;
+        transform.position = targetPos;
+
+        #endregion
 
         #region Mouse Zoom
         //Mousewheel zoom
