@@ -6,6 +6,8 @@ public class CameraController : MonoBehaviour {
     public Transform player;
     public float rotateSpeed = 5;
 
+    private float targetFov;
+
     void Start()
     {
         Cursor.visible = false;
@@ -19,13 +21,31 @@ public class CameraController : MonoBehaviour {
 
         transform.eulerAngles += new Vector3(-vertical, horizontal, 0);
 
-        float fov = Camera.main.fieldOfView;
-        float newFov = Input.GetAxis("Mouse ScrollWheel") * 30;
-        newFov = Mathf.Clamp(fov, 50, 80);
+        #region Camera 
+        Vector3 targetPos = player.position;
+        targetPos.y = 3;
+        transform.position = targetPos;
 
-        fov = Mathf.Lerp(fov, newFov, Time.deltaTime);
+        #endregion
+
+
+        #region Mouse Zoom
+        //Mousewheel zoom
+        if (Input.GetAxis("Mouse ScrollWheel") > 0 || Input.GetAxis("Mouse ScrollWheel") < 0)
+        {
+            targetFov -= Input.GetAxis("Mouse ScrollWheel") * 100;
+        }
+
+        targetFov = Mathf.Clamp(targetFov, 50, 100);
+
+        Debug.Log(targetFov);
+
+        float fov = Camera.main.fieldOfView;
+
+        fov = Mathf.Lerp(fov, targetFov, Time.deltaTime * 10);
 
         Camera.main.fieldOfView = fov;
+        #endregion
     }
 
 }

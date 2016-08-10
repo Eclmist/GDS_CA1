@@ -8,21 +8,44 @@ public class PlayerController : MonoBehaviour {
 
     public float moveSpeed;
 
-    private Animator animator;
+    private Animator anim;
     private Rigidbody rb;
-    private Vector3 movementDirection;
+
+    private bool passiveMode;
 
     void Start () {
-        animator = GetComponent<Animator>();
+        anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
-        movementDirection = Vector3.zero;
-	}
+        passiveMode = true;
+    }
 	
-	void Update () {
+	void FixedUpdate () {
+        Move();
+
+        AnimUpdate();
+
 	}
 
     void Move()
-    {      
-         //movementDirection = Input.GetAxis(Horizontal)
+    {
+        if (passiveMode)
+        {
+            //calculate movement direction
+            Vector3 forwardVector = Input.GetAxis("Vertical") * Camera.main.transform.forward;
+            forwardVector.y = 0;
+
+            Vector3 moveVector = Input.GetAxis("Horizontal") * Camera.main.transform.right +
+                forwardVector;
+
+            rb.velocity = moveVector.normalized * moveSpeed;
+
+            transform.LookAt(transform.position + rb.velocity);
+
+        }
+    }
+
+    void AnimUpdate()
+    {
+        anim.SetFloat("Forward", rb.velocity.magnitude);
     }
 }
